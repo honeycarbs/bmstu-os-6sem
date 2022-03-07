@@ -60,7 +60,8 @@ static int dopath(const char *pathname, int depth) {
     return -1;
   }
 
-  for (int i = 0; i < depth; ++i) printf("              |");
+  for (int i = 0; i < depth; ++i) printf("       |");
+  printf("_");
 
   // s_isdir проверяет, является ли данный файл каталогом
   if (S_ISDIR(statbuf.st_mode) == 0) {
@@ -72,25 +73,36 @@ static int dopath(const char *pathname, int depth) {
   printf("%s %ld\n", pathname, statbuf.st_ino);
   if ((dp = opendir(pathname)) == NULL) {
     printf("couldn't open directory '%s'\n", pathname);
-    return 1;
+    return -1;
   }
+
+  // printf("   ");
 
   // chdir() изменяет текущий рабочий каталог вызывающего процесса на каталог,
   // указанный в path; PATH — переменная окружения, представляющая собой набор
   // каталогов, в которых расположены исполняемые файлы; нужен для коротких имен
-  chdir(pathname);
+  if (chdir(pathname) == -1) {
+    printf("can't chdir.");
+    return -1;
+  }
 
-  // для каждого элемента каталога
-  // Функция readdir() возвращает указатель на следующую запись каталога в
-  // структуре dirent, прочитанную из потока каталога. Каталог указан в dir.
-  // Функция возвращает NULL по достижении последней записи или если была
-  // обнаружена ошибка.
-  while ((dirp = readdir(dp)) != NULL) dopath(dirp->d_name, depth + 1);
-  chdir("..");
+    // для каждого элемента каталога
+    // Функция readdir() возвращает указатель на следующую запись каталога в
+    // структуре dirent, прочитанную из потока каталога. Каталог указан в dir.
+    // Функция возвращает NULL по достижении последней записи или если была
+    // обнаружена ошибка.
+    while ((dirp = readdir(dp)) != NULL) dopath(dirp->d_name, depth + 1);
+    if (chdir ("..") == -1) {
+      printf("can't chdir.");
+      return -1;
+    }
 
-  //закрывает поток каталога и освобождает ресурсы, выделенные ему.
-  //Она возвращает 0 в случае успеха и -1 при наличии ошибки.
-  closedir(dp);
+    //закрывает поток каталога и освобождает ресурсы, выделенные ему.
+    //Она возвращает 0 в случае успеха и -1 при наличии ошибки.
+    if (closedir(dp) == -1) {
+      printf("can't chdir.");
+      return -1;
+    }
 }
 
 int main(int argc, char *argv[]) {
