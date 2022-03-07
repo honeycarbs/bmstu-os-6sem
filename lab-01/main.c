@@ -9,7 +9,9 @@
 #include <string.h> // strerror
 #include <errno.h> // errno
 #include <pthread.h>
-#include <stdio.h>
+// #include <stdio.h>
+
+// ЛР2: анализировать ошибки свитчем, расписывать ошибки lstat
 
 #define LOCKFILE "/var/run/daemon.pid"
 #define LOCKMODE S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH
@@ -42,13 +44,16 @@ void daemonize(const char *cmd) {
     if (getrlimit(RLIMIT_NOFILE, &rl) < 0) { // позволяет получить максимальный номер дескриптора для того чтобы в последствии закрыть все открытые файлы
         syslog(LOG_ERR, "can\'t get file limit\n");
     }
-    // стать лидером новой сессии, чтобы утратить управляющий терминал
+
     if ((pid = fork()) < 0) {
         syslog(LOG_ERR, "can\'t fork\n");
     } else if (pid != 0) {
         exit(0);
-    } 
-    setsid();
+    }
+    if (setsid() == -1) {
+      syslog(LOG_ERR, "can\'t setsid\n");
+      exit(1);
+    }
     // обеспечить невозможность утрату терминала в будущем
     // сигнал SIGHUB сообщает процессу, что процесс утратил управляющий терминал
     sa.sa_handler = SIG_IGN; // мактрос - ignore this signal
