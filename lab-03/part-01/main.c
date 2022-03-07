@@ -17,13 +17,13 @@ static int __init mod_init(void) {
     struct task_struct *task = &init_task; // структура - дескриптор процесса
     printk(KERN_INFO " > module is loaded.\n");
     do {
-      printk(KERN_INFO " > %s - %d, parent %s - %d", // позволяет отправлять сообщения в системный журнал.
-      task->comm, task->pid, task->parent->comm, task->parent->pid); // KERN_INFO - уровень приоритета сообщения (информационный)
+      printk(KERN_INFO " > %s - %d (%ld - state, %d - prio), parent %s - %d", // позволяет отправлять сообщения в системный журнал.
+             task->comm, task->pid, task->state, task->prio, task->parent->comm, task->parent->pid); // KERN_INFO - уровень приоритета сообщения (информационный)
     } while ((task = next_task(task)) != &init_task);
 
     // символ current определяет текущий процесс
-    printk(KERN_INFO " > %s - %d, parent %s - %d", 
-           current->comm, current->pid, current->parent->comm, current->parent->pid);
+    printk(KERN_INFO " > %s - %d (%ld - state, %d - prio), parent %s - %d",
+           current->comm, current->pid, current->state, current->prio, current->parent->comm, current->parent->pid);
     return 0;
 }
 

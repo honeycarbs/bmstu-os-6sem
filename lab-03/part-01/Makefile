@@ -26,6 +26,7 @@ clean:
 	@rm -f .*.*.cmd *~ *.*~ TODO.*
 	@rm -fR .tmp*
 	@rm -rf .tmp_versions
+	@rm *.mod
 
 disclean: clean
 	@rm *.ko *.symvers
