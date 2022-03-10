@@ -1,6 +1,6 @@
 #include <linux/init.h>       // макросы __init, __exit
 #include <linux/init_task.h>  // init_task
-#include <linux/kernel.h>     // уровни протоколирования, printk
+// #include <linux/kernel.h>     // уровни протоколирования, printk
 #include <linux/module.h>     // макросы module_init, module_exit, MODULE_LICENSE ...
 #include <linux/sched.h>      // task_struct
 
@@ -17,21 +17,23 @@ static int __init mod_init(void) {
     struct task_struct *task = &init_task; // структура - дескриптор процесса
     printk(KERN_INFO " + module is loaded.\n");
     do {
-      printk(KERN_INFO " + %s - %d (%ld - state, %d - prio), parent %s - %d", // позволяет отправлять сообщения в системный журнал.
-             task->comm, task->pid, task->state, task->prio, task->parent->comm, task->parent->pid); // KERN_INFO - уровень приоритета сообщения (информационный)
+      printk(KERN_INFO " + %s - %d (%ld - state, %d - prio, %u - rt_prio, %d - static_prio, %d - normal_prio), parent %s - %d", // позволяет отправлять сообщения в системный журнал.
+             task->comm, task->pid, task->state, task->prio, task->rt_priority, task->static_prio, task->normal_prio, task->parent->comm, task->parent->pid); // KERN_INFO - уровень приоритета сообщения (информационный)
     } while ((task = next_task(task)) != &init_task); // список проходим, используя next_task до тех пор, пока опять не встретим init
     // в результате в системном журнале будет выведена информация о всех выполняемы процессах, так же как ps -agx
     // task->parent->pid, потому что в структуре процесса есть поле, указывающее struct task_struct на родителя.
 
     // символ current определяет текущий процесс
     // текущим является исполняемый в данный момент процесс.
-    printk(KERN_INFO " + CURRENT: %s - %d, parent %s - %d",
+    printk(KERN_INFO " + %s - %d, parent %s - %d",
            current->comm, current->pid, current->parent->comm, current->parent->pid);
     return 0;
 }
 
 static void __exit mod_exit(void) {
-  printk(KERN_INFO " + module is unloaded.\n");
+  // printk(KERN_INFO " + module is unloaded.\n");
+  printk(KERN_INFO " + %s - %d, parent %s - %d\n", current->comm,
+         current->pid, current->parent->comm, current->parent->pid);
 }
 
 // регистрация функции инициализации модуля - запрос ресурсов и выделение памяти
