@@ -1,6 +1,7 @@
 #include <signal.h>
 #include <fcntl.h>
 #include <syslog.h>
+#include <stdio.h>
 #include <sys/resource.h>
 #include <sys/types.h>
 #include <sys/stat.h>
