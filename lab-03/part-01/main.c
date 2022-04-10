@@ -16,7 +16,7 @@ MODULE_AUTHOR("Kazaeva Tatiana");
 static int __init mod_init(void) {
     struct task_struct *task = &init_task; // структура - дескриптор процесса
     printk(KERN_INFO " + module is loaded.\n");
-    do {
+    do {      
       printk(KERN_INFO " + %s - %d (%ld - state, %d - prio, %u - rt_prio, %d - static_prio, %d - normal_prio), parent %s - %d", // позволяет отправлять сообщения в системный журнал.
              task->comm, task->pid, task->state, task->prio, task->rt_priority, task->static_prio, task->normal_prio, task->parent->comm, task->parent->pid); // KERN_INFO - уровень приоритета сообщения (информационный)
     } while ((task = next_task(task)) != &init_task); // список проходим, используя next_task до тех пор, пока опять не встретим init
@@ -25,8 +25,8 @@ static int __init mod_init(void) {
 
     // символ current определяет текущий процесс
     // текущим является исполняемый в данный момент процесс.
-    printk(KERN_INFO " + %s - %d, parent %s - %d",
-           current->comm, current->pid, current->parent->comm, current->parent->pid);
+    printk(KERN_INFO " + %s - %d, parent %s - %d, THREAD PID %c",
+           current->comm, current->pid, current->parent->comm, current->parent->pid, current->thread_pid);
     return 0;
 }
 
