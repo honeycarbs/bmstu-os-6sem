@@ -54,7 +54,9 @@ static void *fortune_seq_next(struct seq_file *s, void *v, loff_t *pos) {
 /*
   вызывается в конце последовательности
  */
-static void fortune_seq_stop(struct seq_file *s, void *v) {}
+static void fortune_seq_stop(struct seq_file *s, void *v) {
+  printk(KERN_INFO "== call seq_stop\n");
+}
 
 /*
   вызывается при каждом шаге последовательности
