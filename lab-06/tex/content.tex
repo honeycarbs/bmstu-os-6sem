@@ -1,0 +1,100 @@
+\textsc{\huge Используемые структуры}
+\begin{lstlisting}[caption={\text{Структура open\_flags}}]
+struct open_flags {
+	int open_flag;
+	umode_t mode;
+	int acc_mode;
+	int intent;
+	int lookup_flags;
+};
+\end{lstlisting}
+
+\begin{lstlisting}[caption={\text{Структура filename}}]
+struct filename {
+	const char		*name;	/* pointer to actual string */
+	const __user char	*uptr;	/* original userland pointer */
+	int			refcnt;
+	struct audit_names	*aname;
+	const char		iname[];
+};	
+\end{lstlisting}
+
+\begin{lstlisting}[caption={\text{Структура nameidata}}]
+struct nameidata {
+	struct path	path;
+	struct qstr	last;
+	struct path	root;
+	struct inode	*inode; /* path.dentry.d_inode */
+	unsigned int	flags, state;
+	unsigned	seq, m_seq, r_seq;
+	int		last_type;
+	unsigned	depth;
+	int		total_link_count;
+	struct saved {
+		struct path link;
+		struct delayed_call done;
+		const char *name;
+		unsigned seq;
+	} *stack, internal[EMBEDDED_LEVELS];
+	struct filename	*name;
+	struct nameidata *saved;
+	unsigned	root_seq;
+	int		dfd;
+	kuid_t		dir_uid;
+	umode_t		dir_mode;
+} __randomize_layout;	
+\end{lstlisting}
+
+
+\textsc{\huge Схемы алгоритмов} \\
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{assets/flowchart-open.drawio.png}
+	\caption{Схема алгоритма работы системного вызова open() (начало)}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.6]{assets/flowchart-open1.drawio.png}
+	\caption{Схема алгоритма работы системного вызова open() (Продолжение)}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{assets/flowchart-build_.drawio.png}
+	\caption{Схема алгоритма работы функции build\_open\_flags()}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.5]{assets/flowchart-getname.drawio.png}
+	\caption{Схема алгоритма работы функции getname\_flags()}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.47]{assets/flowchart-alloc_fd.drawio.png}
+	\caption{Схема алгоритма работы функции alloc\_fd()}
+\end{figure}
+
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.52]{assets/flowchart-openat.drawio.png}
+	\caption{Схема алгоритма функции path\_openat()}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.6]{assets/flowchart-nameidata.drawio.png}
+	\caption{Схема алгоритмов функций, работающих с nameidata}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[scale=0.6]{assets/flowchart-open_last_lookups.drawio.png}
+	\caption{Схема алгоритма функции open\_last\_lookups()}
+\end{figure}
+
+
+

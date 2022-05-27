@@ -1,0 +1,262 @@
+\usepackage{cmap}
+\usepackage[T1]{fontenc} 
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+
+\usepackage{colortbl}
+
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{textcomp}
+\usepackage{enumitem}
+
+\usepackage{float}
+
+
+
+\usepackage{enumitem}
+
+\usepackage{graphicx}
+\usepackage{multirow}
+
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepgfplotslibrary{units}
+
+\usepackage{caption}
+\captionsetup{labelsep=endash}
+\captionsetup[figure]{name={Рисунок}}
+\captionsetup[subtable]{labelformat=simple}
+\captionsetup[subfigure]{labelformat=simple}
+\renewcommand{\thesubtable}{\text{Таблица }\arabic{chapter}\text{.}\arabic{table}\text{.}\arabic{subtable}\text{ --}}
+\renewcommand{\thefigure}{\arabic{figure}}
+
+
+\usepackage{textcomp}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{array}
+
+\usepackage{geometry}
+\geometry{left=30mm}
+\geometry{right=15mm}
+\geometry{top=20mm}
+\geometry{bottom=20mm}
+\geometry{foot=1.7cm}
+
+\usepackage{titlesec}
+\titleformat{\section}
+{\normalsize\bfseries}
+{\thesection}
+{1em}{}
+\titlespacing*{\chapter}{0pt}{-30pt}{8pt}
+\titlespacing*{\section}{\parindent}{*4}{*4}
+\titlespacing*{\subsection}{\parindent}{*4}{*4}
+
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{multicol}
+\usepackage{xpatch}
+\usepackage{realboxes}
+
+
+
+% Маркировка для списков
+\def\labelitemi{$\circ$}
+\def\labelitemii{$*$}
+
+
+\usepackage{setspace}
+\onehalfspacing % Полуторный интервал
+
+\frenchspacing
+\usepackage{indentfirst} % Красная строка
+
+\usepackage{titlesec}
+\usepackage{xcolor}
+% Названия глав
+\titleformat{\section}{\normalsize\textmd}{\thesection}{1em}{}
+
+\definecolor{gray35}{gray}{0.35}
+
+\newcommand{\hsp}{\hspace{20pt}} % длина линии в 20pt
+
+\titleformat{\chapter}[hang]{\huge}{\textcolor{gray35}{\thechapter.}\hsp}{0pt}{\huge\scshape}
+
+\titleformat{\section}{\Large}{\textcolor{gray35}\thesection}{20pt}{\Large\scshape}
+\titleformat{\subsection}{\Large}{\thesubsection}{20pt}{\Huge\textmd}
+\titleformat{\subsubsection}{\normalfont\textmd}{}{0pt}{}
+
+% Настройки введения
+
+\addtocontents{toc}{\setcounter{tocdepth}{2}}
+\addtocontents{toc}{\setcounter{secnumdepth}{1}}
+
+\usepackage{tocloft,lipsum,pgffor}
+
+\addtocontents{toc}{~\hfill\textnormal{Страница}\par}
+
+\renewcommand{\cftpartfont}{\normalfont\textmd}
+
+\addto\captionsrussian{\renewcommand{\contentsname}{Содержание}}
+\renewcommand{\cfttoctitlefont}{\Huge\textmd}
+
+\renewcommand{\cftchapfont}{\normalfont\normalsize}
+\renewcommand{\cftsecfont}{\normalfont\normalsize}
+\renewcommand{\cftsubsecfont}{\normalfont\normalsize}
+\renewcommand{\cftsubsubsecfont}{\normalfont\normalsize}
+
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}}
+
+\usepackage{listings}
+\usepackage{xcolor}
+%\usepackage{algorithm}
+%\usepackage{algpseudocode}
+
+\lstnewenvironment{itemlisting}[1][]
+{%
+	\mbox{}
+	\vspace*{-\baselineskip}
+	\lstset{
+		xleftmargin=\leftmargin,
+		linewidth=\linewidth,
+		#1
+	}%
+}
+{}
+
+\newcommand{\olsi}[1]{\,\overline{\!{#1}}}
+
+\bibliographystyle{utf8gost705u.bst}
+\usepackage[backend=biber,
+sorting=none,
+]{biblatex} 
+
+\usepackage{tasks}
+
+\addbibresource{ref-lib.bib} % База библиографии
+
+\usepackage[pdftex]{hyperref} % Гиперссылки
+\hypersetup{hidelinks}
+
+% Листинги 
+\usepackage{listings}
+\lstset{
+	literate=
+	{а}{{\selectfont\char224}}1
+	{б}{{\selectfont\char225}}1
+	{в}{{\selectfont\char226}}1
+	{г}{{\selectfont\char227}}1
+	{д}{{\selectfont\char228}}1
+	{е}{{\selectfont\char229}}1
+	{ё}{{\"e}}1
+	{ж}{{\selectfont\char230}}1
+	{з}{{\selectfont\char231}}1
+	{и}{{\selectfont\char232}}1
+	{й}{{\selectfont\char233}}1
+	{к}{{\selectfont\char234}}1
+	{л}{{\selectfont\char235}}1
+	{м}{{\selectfont\char236}}1
+	{н}{{\selectfont\char237}}1
+	{о}{{\selectfont\char238}}1
+	{п}{{\selectfont\char239}}1
+	{р}{{\selectfont\char240}}1
+	{с}{{\selectfont\char241}}1
+	{т}{{\selectfont\char242}}1
+	{у}{{\selectfont\char243}}1
+	{ф}{{\selectfont\char244}}1
+	{х}{{\selectfont\char245}}1
+	{ц}{{\selectfont\char246}}1
+	{ч}{{\selectfont\char247}}1
+	{ш}{{\selectfont\char248}}1
+	{щ}{{\selectfont\char249}}1
+	{ъ}{{\selectfont\char250}}1
+	{ы}{{\selectfont\char251}}1
+	{ь}{{\selectfont\char252}}1
+	{э}{{\selectfont\char253}}1
+	{ю}{{\selectfont\char254}}1
+	{я}{{\selectfont\char255}}1
+	{А}{{\selectfont\char192}}1
+	{Б}{{\selectfont\char193}}1
+	{В}{{\selectfont\char194}}1
+	{Г}{{\selectfont\char195}}1
+	{Д}{{\selectfont\char196}}1
+	{Е}{{\selectfont\char197}}1
+	{Ё}{{\"E}}1
+	{Ж}{{\selectfont\char198}}1
+	{З}{{\selectfont\char199}}1
+	{И}{{\selectfont\char200}}1
+	{Й}{{\selectfont\char201}}1
+	{К}{{\selectfont\char202}}1
+	{Л}{{\selectfont\char203}}1
+	{М}{{\selectfont\char204}}1
+	{Н}{{\selectfont\char205}}1
+	{О}{{\selectfont\char206}}1
+	{П}{{\selectfont\char207}}1
+	{Р}{{\selectfont\char208}}1
+	{С}{{\selectfont\char209}}1
+	{Т}{{\selectfont\char210}}1
+	{У}{{\selectfont\char211}}1
+	{Ф}{{\selectfont\char212}}1
+	{Х}{{\selectfont\char213}}1
+	{Ц}{{\selectfont\char214}}1
+	{Ч}{{\selectfont\char215}}1
+	{Ш}{{\selectfont\char216}}1
+	{Щ}{{\selectfont\char217}}1
+	{Ъ}{{\selectfont\char218}}1
+	{Ы}{{\selectfont\char219}}1
+	{Ь}{{\selectfont\char220}}1
+	{Э}{{\selectfont\char221}}1
+	{Ю}{{\selectfont\char222}}1
+	{Я}{{\selectfont\char223}}1
+}
+\lstset{
+	language=Matlab,
+	morekeywords={matlab2tikz},
+	numbers=left, 
+	numberstyle=\tiny,
+	stepnumber=1,
+	firstnumber=1,
+	numbersep=5pt,
+	frame=single,
+	basicstyle=\footnotesize, 
+	showstringspaces=false,
+	breaklines=true,
+}
+
+
+
+\definecolor{darkgray}{gray}{0.15}
+
+\definecolor{teal}{rgb}{0.25,0.88,0.73}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{b-red}{rgb}{0.88,0.25,0.41}
+\definecolor{royal-blue}{rgb}{0.25,0.41,0.88}
+
+
+% какой то сложный кусок со стак эксчейндж для квадратных скобок
+\makeatletter
+\newenvironment{sqcases}{%
+	\matrix@check\sqcases\env@sqcases
+}{%
+	\endarray\right.%
+}
+\def\env@sqcases{%
+	\let\@ifnextchar\new@ifnextchar
+	\left\lbrack
+	\def\arraystretch{1.2}%
+	\array{@{}l@{\quad}l@{}}%
+}
+\makeatother
+
+% и для матриц
+\makeatletter
+\renewcommand*\env@matrix[1][\arraystretch]{%
+	\edef\arraystretch{#1}%
+	\hskip -\arraycolsep
+	\let\@ifnextchar\new@ifnextchar
+	\array{*\c@MaxMatrixCols c}}
+\makeatother
