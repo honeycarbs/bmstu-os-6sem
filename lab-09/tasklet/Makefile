@@ -1,5 +1,5 @@
 ifneq ($(KERNELRELEASE),)
-	obj-m := myvfs_min.o
+	obj-m := tasklet.o
 else
 	CURRENT = $(shell uname -r)
 	KDIR = /lib/modules/$(CURRENT)/build

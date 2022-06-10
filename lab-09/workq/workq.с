@@ -1,0 +1,142 @@
+#include <linux/kernel.h>
+#include <linux/module.h>
+#include <linux/interrupt.h>
+#include <linux/time.h>
+#include <linux/workqueue.h>
+#include <linux/lockdep.h>
+#include <linux/mutex.h>
+#include <linux/proc_fs.h>
+#include <linux/sched.h>
+#include <linux/uaccess.h>
+#include <linux/fs.h>
+#include <linux/seq_file.h>
+#include <linux/unistd.h>
+#include <linux/slab.h>
+#include <linux/delay.h>
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Tatiana K.");
+
+#define IRQ_NUM 1
+#define IRQ_NAME "myirq"
+#define WQ_NAME "workqueue"
+
+static struct workqueue_struct *my_wq;
+
+typedef struct
+{
+    struct work_struct work;
+    int work_num;
+} my_work_t;
+
+static my_work_t *work_1;
+static my_work_t *work_2;
+
+static int counter = 0;
+
+struct mutex my_mutex;
+
+void my_bottom_half(struct work_struct *work)
+{
+    mutex_lock(&my_mutex);
+    printk(KERN_INFO "== mutex is locked\n");
+
+    my_work_t *my_work = (my_work_t *)work;
+
+    printk(KERN_INFO "== work_%d in critical section, work_%d pending\n", my_work->work_num, work_pending(&(my_work->work)));
+
+    if (my_work->work_num == 1) //
+        printk(KERN_INFO "== work_2 - work_pending - %d\n", work_pending(&(work_2->work)));
+    else
+        printk(KERN_INFO "== work_1 - work_pending - %d\n", work_pending(&(work_1->work)));
+
+    msleep(100);
+    counter++;
+    printk(KERN_INFO "== shared value change by worker %d -> %d\n", my_work->work_num, counter);
+
+    mutex_unlock(&my_mutex);
+    printk(KERN_INFO "== mutex is unlocked\n");
+}
+
+irqreturn_t my_irq_handler(int irq_num, void *dev_id)
+{
+    if (irq_num == IRQ_NUM)
+    {
+        if (work_1)
+            queue_work(my_wq, (struct work_struct *)work_1);
+        if (work_2)
+            queue_work(my_wq, (struct work_struct *)work_2);
+
+        return IRQ_HANDLED;
+    }
+    return IRQ_NONE;
+}
+
+static int __init my_module_init(void)
+{
+
+    if (request_irq(IRQ_NUM, my_irq_handler, IRQF_SHARED, IRQ_NAME, my_irq_handler))
+    {
+        printk(KERN_ERR "== can't request_irq\n");
+        return -ENOMEM;
+    }
+    printk(KERN_INFO "== IRQ handler reqistered\n");
+
+    work_1 = (my_work_t *)kmalloc(sizeof(my_work_t), GFP_KERNEL);
+    work_2 = (my_work_t *)kmalloc(sizeof(my_work_t), GFP_KERNEL);
+
+    if (work_1)
+    {
+        INIT_WORK((struct work_struct *)work_1, my_bottom_half);
+        work_1->work_num = 1;
+    }
+    else
+    {
+        printk(KERN_ERR "== can't kalloc\n");
+        return -ENOMEM;
+    }
+
+    if (work_2)
+    {
+        INIT_WORK((struct work_struct *)work_2, my_bottom_half);
+        work_2->work_num = 2;
+    }
+    else
+    {
+        printk(KERN_ERR "== can't kalloc\n");
+    }
+
+    my_wq = create_workqueue(WQ_NAME);
+    if (!my_wq)
+    {
+        free_irq(IRQ_NUM, my_irq_handler);
+        printk(KERN_ERR "== can't create_workqueue\n");
+        return -ENOMEM;
+    }
+    printk(KERN_INFO "== work queue created.\n");
+    mutex_init(&my_mutex);
+
+    printk(KERN_INFO "== module loaded.\n");
+    return 0;
+}
+
+static void __exit my_module_exit(void)
+{
+    free_irq(IRQ_NUM, my_irq_handler);
+
+    // Удаление очереди работ
+    flush_workqueue(my_wq);
+    destroy_workqueue(my_wq);
+    mutex_destroy(&my_mutex);
+
+    if (work_1)
+        kfree(work_1);
+
+    if (work_2)
+        kfree(work_2);
+
+    printk(KERN_INFO "== module unloaded.\n");
+}
+
+module_init(my_module_init);
+module_exit(my_module_exit);
